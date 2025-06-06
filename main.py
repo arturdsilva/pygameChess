@@ -2,17 +2,15 @@
 # part one, set up variables images and game loop
 
 import pygame
+from Constants import Constants
 
 pygame.init()
-WIDTH = 1000
-HEIGHT = 900
-screen = pygame.display.set_mode([WIDTH, HEIGHT])
+screen = pygame.display.set_mode([Constants.WIDTH, Constants.HEIGHT])
 pygame.display.set_caption('Two-Player Pygame Chess!')
 font = pygame.font.Font('freesansbold.ttf', 20)
 medium_font = pygame.font.Font('freesansbold.ttf', 40)
 big_font = pygame.font.Font('freesansbold.ttf', 50)
 timer = pygame.time.Clock()
-fps = 60
 # game variables and images
 white_pieces = ['rook', 'knight', 'bishop', 'king', 'queen', 'bishop', 'knight', 'rook',
                 'pawn', 'pawn', 'pawn', 'pawn', 'pawn', 'pawn', 'pawn', 'pawn']
@@ -84,18 +82,18 @@ def draw_board():
         column = i % 4
         row = i // 4
         if row % 2 == 0:
-            pygame.draw.rect(screen, 'light gray', [600 - (column * 200), row * 100, 100, 100])
+            pygame.draw.rect(screen, 'light gray', [600 - (column * 200), row * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE])
         else:
-            pygame.draw.rect(screen, 'light gray', [700 - (column * 200), row * 100, 100, 100])
-        pygame.draw.rect(screen, 'gray', [0, 800, WIDTH, 100])
-        pygame.draw.rect(screen, 'gold', [0, 800, WIDTH, 100], 5)
-        pygame.draw.rect(screen, 'gold', [800, 0, 200, HEIGHT], 5)
+            pygame.draw.rect(screen, 'light gray', [700 - (column * 200), row * Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE])
+        pygame.draw.rect(screen, 'gray', [0, 800, Constants.WIDTH, 100])
+        pygame.draw.rect(screen, 'gold', [0, 800, Constants.WIDTH, 100], 5)
+        pygame.draw.rect(screen, 'gold', [800, 0, 200, Constants.HEIGHT], 5)
         status_text = ['White: Select a Piece to Move!', 'White: Select a Destination!',
                        'Black: Select a Piece to Move!', 'Black: Select a Destination!']
         screen.blit(big_font.render(status_text[turn_step], True, 'black'), (20, 820))
         for i in range(9):
-            pygame.draw.line(screen, 'black', (0, 100 * i), (800, 100 * i), 2)
-            pygame.draw.line(screen, 'black', (100 * i, 0), (100 * i, 800), 2)
+            pygame.draw.line(screen, 'black', (0, Constants.TILE_SIZE * i), (800, Constants.TILE_SIZE * i), 2)
+            pygame.draw.line(screen, 'black', (Constants.TILE_SIZE * i, 0), (Constants.TILE_SIZE * i, 800), 2)
         screen.blit(medium_font.render('FORFEIT', True, 'black'), (810, 830))
 
 
@@ -104,24 +102,24 @@ def draw_pieces():
     for i in range(len(white_pieces)):
         index = piece_list.index(white_pieces[i])
         if white_pieces[i] == 'pawn':
-            screen.blit(white_pawn, (white_locations[i][0] * 100 + 22, white_locations[i][1] * 100 + 30))
+            screen.blit(white_pawn, (white_locations[i][0] * Constants.TILE_SIZE + 22, white_locations[i][1] * Constants.TILE_SIZE + 30))
         else:
-            screen.blit(white_images[index], (white_locations[i][0] * 100 + 10, white_locations[i][1] * 100 + 10))
+            screen.blit(white_images[index], (white_locations[i][0] * Constants.TILE_SIZE + 10, white_locations[i][1] * Constants.TILE_SIZE + 10))
         if turn_step < 2:
             if selection == i:
-                pygame.draw.rect(screen, 'red', [white_locations[i][0] * 100 + 1, white_locations[i][1] * 100 + 1,
-                                                 100, 100], 2)
+                pygame.draw.rect(screen, 'red', [white_locations[i][0] * Constants.TILE_SIZE + 1, white_locations[i][1] * Constants.TILE_SIZE + 1,
+                                                 Constants.TILE_SIZE, Constants.TILE_SIZE], 2)
 
     for i in range(len(black_pieces)):
         index = piece_list.index(black_pieces[i])
         if black_pieces[i] == 'pawn':
-            screen.blit(black_pawn, (black_locations[i][0] * 100 + 22, black_locations[i][1] * 100 + 30))
+            screen.blit(black_pawn, (black_locations[i][0] * Constants.TILE_SIZE + 22, black_locations[i][1] * Constants.TILE_SIZE + 30))
         else:
-            screen.blit(black_images[index], (black_locations[i][0] * 100 + 10, black_locations[i][1] * 100 + 10))
+            screen.blit(black_images[index], (black_locations[i][0] * Constants.TILE_SIZE + 10, black_locations[i][1] * Constants.TILE_SIZE + 10))
         if turn_step >= 2:
             if selection == i:
-                pygame.draw.rect(screen, 'blue', [black_locations[i][0] * 100 + 1, black_locations[i][1] * 100 + 1,
-                                                  100, 100], 2)
+                pygame.draw.rect(screen, 'blue', [black_locations[i][0] * Constants.TILE_SIZE + 1, black_locations[i][1] * Constants.TILE_SIZE + 1,
+                                                  Constants.TILE_SIZE, Constants.TILE_SIZE], 2)
 
 
 # function to check all pieces valid options on board
@@ -309,7 +307,7 @@ def draw_valid(moves):
     else:
         color = 'blue'
     for i in range(len(moves)):
-        pygame.draw.circle(screen, color, (moves[i][0] * 100 + 50, moves[i][1] * 100 + 50), 5)
+        pygame.draw.circle(screen, color, ((moves[i][0] + 0.5) * Constants.TILE_SIZE, (moves[i][1] + 0.5) * Constants.TILE_SIZE), 5)
 
 
 # draw captured pieces on side of screen
@@ -333,8 +331,8 @@ def draw_check():
             for i in range(len(black_options)):
                 if king_location in black_options[i]:
                     if counter < 15:
-                        pygame.draw.rect(screen, 'dark red', [white_locations[king_index][0] * 100 + 1,
-                                                              white_locations[king_index][1] * 100 + 1, 100, 100], 5)
+                        pygame.draw.rect(screen, 'dark red', [white_locations[king_index][0] * Constants.TILE_SIZE + 1,
+                                                              white_locations[king_index][1] * Constants.TILE_SIZE + 1, Constants.TILE_SIZE, Constants.TILE_SIZE], 5)
     else:
         if 'king' in black_pieces:
             king_index = black_pieces.index('king')
@@ -342,8 +340,8 @@ def draw_check():
             for i in range(len(white_options)):
                 if king_location in white_options[i]:
                     if counter < 15:
-                        pygame.draw.rect(screen, 'dark blue', [black_locations[king_index][0] * 100 + 1,
-                                                               black_locations[king_index][1] * 100 + 1, 100, 100], 5)
+                        pygame.draw.rect(screen, 'dark blue', [black_locations[king_index][0] * Constants.TILE_SIZE + 1,
+                                                               black_locations[king_index][1] * Constants.TILE_SIZE + 1, Constants.TILE_SIZE, Constants.TILE_SIZE], 5)
 
 
 def draw_game_over():
@@ -357,7 +355,7 @@ black_options = check_options(black_pieces, black_locations, 'black')
 white_options = check_options(white_pieces, white_locations, 'white')
 run = True
 while run:
-    timer.tick(fps)
+    timer.tick(Constants.FPS)
     if counter < 30:
         counter += 1
     else:
@@ -375,8 +373,8 @@ while run:
         if event.type == pygame.QUIT:
             run = False
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and not game_over:
-            x_coord = event.pos[0] // 100
-            y_coord = event.pos[1] // 100
+            x_coord = event.pos[0] // Constants.TILE_SIZE
+            y_coord = event.pos[1] // Constants.TILE_SIZE
             click_coords = (x_coord, y_coord)
             if turn_step <= 1:
                 if click_coords == (8, 8) or click_coords == (9, 8):
