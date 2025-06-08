@@ -134,70 +134,54 @@ class Drawer:
                 )
             self.screen.blit(self.fonts["big"].render("FORFEIT", True, "black"), (810, 830))
 
-    def draw_pieces(self, white_pieces, white_locations, black_pieces, black_locations, turn_step, selection):
-        for i in range(len(white_pieces)):
-            index = self.piece_list.index(white_pieces[i])
-            if white_pieces[i] == "pawn":
+    def draw_pieces(self, white_pieces, black_pieces, turn_step, selection):
+        for i, piece in enumerate(white_pieces):
+            name = type(piece).__name__.lower()
+            index = self.piece_list.index(name)
+            x, y = piece.location
+
+            if name == "pawn":
                 self.screen.blit(
                     self.white_images[0],
-                    (
-                        white_locations[i][0] * Constants.TILE_SIZE + 22,
-                        white_locations[i][1] * Constants.TILE_SIZE + 30,
-                    ),
+                    (x * Constants.TILE_SIZE + 22, y * Constants.TILE_SIZE + 30),
                 )
             else:
                 self.screen.blit(
                     self.white_images[index],
-                    (
-                        white_locations[i][0] * Constants.TILE_SIZE + 10,
-                        white_locations[i][1] * Constants.TILE_SIZE + 10,
-                    ),
+                    (x * Constants.TILE_SIZE + 10, y * Constants.TILE_SIZE + 10),
                 )
-            if turn_step < 2:
-                if selection == i:
-                    pygame.draw.rect(
-                        self.screen,
-                        "red",
-                        [
-                            white_locations[i][0] * Constants.TILE_SIZE + 1,
-                            white_locations[i][1] * Constants.TILE_SIZE + 1,
-                            Constants.TILE_SIZE,
-                            Constants.TILE_SIZE,
-                        ],
-                        2,
-                    )
 
-        for i in range(len(black_pieces)):
-            index = self.piece_list.index(black_pieces[i])
-            if black_pieces[i] == "pawn":
+            if turn_step < 2 and selection == i:
+                pygame.draw.rect(
+                    self.screen,
+                    "red",
+                    [x * Constants.TILE_SIZE + 1, y * Constants.TILE_SIZE + 1, Constants.TILE_SIZE, Constants.TILE_SIZE],
+                    2,
+                )
+
+        for i, piece in enumerate(black_pieces):
+            name = type(piece).__name__.lower()
+            index = self.piece_list.index(name)
+            x, y = piece.location
+
+            if name == "pawn":
                 self.screen.blit(
                     self.black_images[0],
-                    (
-                        black_locations[i][0] * Constants.TILE_SIZE + 22,
-                        black_locations[i][1] * Constants.TILE_SIZE + 30,
-                    ),
+                    (x * Constants.TILE_SIZE + 22, y * Constants.TILE_SIZE + 30),
                 )
             else:
                 self.screen.blit(
                     self.black_images[index],
-                    (
-                        black_locations[i][0] * Constants.TILE_SIZE + 10,
-                        black_locations[i][1] * Constants.TILE_SIZE + 10,
-                    ),
+                    (x * Constants.TILE_SIZE + 10, y * Constants.TILE_SIZE + 10),
                 )
-            if turn_step >= 2:
-                if selection == i:
-                    pygame.draw.rect(
-                        self.screen,
-                        "blue",
-                        [
-                            black_locations[i][0] * Constants.TILE_SIZE + 1,
-                            black_locations[i][1] * Constants.TILE_SIZE + 1,
-                            Constants.TILE_SIZE,
-                            Constants.TILE_SIZE,
-                        ],
-                        2,
-                    )
+
+            if turn_step >= 2 and selection == i:
+                pygame.draw.rect(
+                    self.screen,
+                    "blue",
+                    [x * Constants.TILE_SIZE + 1, y * Constants.TILE_SIZE + 1, Constants.TILE_SIZE, Constants.TILE_SIZE],
+                    2,
+                )
 
     def draw_valid(self, moves, turn_step):
         if turn_step < 2:
@@ -218,11 +202,13 @@ class Drawer:
     def draw_captured(self, captured_pieces_white, captured_pieces_black):
         for i in range(len(captured_pieces_white)):
             captured_piece = captured_pieces_white[i]
-            index = self.piece_list.index(captured_piece)
+            piece_name = type(captured_piece).__name__.lower()
+            index = self.piece_list.index(piece_name)
             self.screen.blit(self.small_black_images[index], (825, 5 + 50 * i))
         for i in range(len(captured_pieces_black)):
             captured_piece = captured_pieces_black[i]
-            index = self.piece_list.index(captured_piece)
+            piece_name = type(captured_piece).__name__.lower()
+            index = self.piece_list.index(piece_name)
             self.screen.blit(self.small_white_images[index], (925, 5 + 50 * i))
 
     def draw_check(self, pos, color):
