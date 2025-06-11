@@ -42,6 +42,17 @@ def check_valid_moves():
     valid_options = options_list[selection]
     return valid_options
 
+def check_for_check(pieces, enemy_options):
+    for piece in pieces:
+        if isinstance(piece, King):
+            king_location = piece.location
+            for moves in enemy_options:
+                if king_location in moves:
+                    pos = (king_location[0] * Constants.TILE_SIZE + 1,
+                           king_location[1] * Constants.TILE_SIZE + 1)
+                    return pos
+    return None
+
 def get_locations(pieces):
     return [p.location for p in pieces]
 
@@ -73,24 +84,16 @@ while run:
     drawer.draw_board(turn_step)
     drawer.draw_pieces(white_pieces, black_pieces, turn_step, selection)
     drawer.draw_captured(captured_pieces_white, captured_pieces_black)
+
     if turn_step < 2:
-        for piece in white_pieces:
-            if isinstance(piece, King):
-                king_location = piece.location
-                for i in range(len(black_options)):
-                    if king_location in black_options[i]:
-                        position = (king_location[0] * Constants.TILE_SIZE + 1,
-                                    king_location[1] * Constants.TILE_SIZE + 1)
-                        drawer.draw_check(position, 'dark red')
+        king_pos = check_for_check(white_pieces, black_options)
+        if king_pos:
+            drawer.draw_check(king_pos, 'dark red')
     else:
-        for piece in black_pieces:
-            if isinstance(piece, King):
-                king_location = piece.location
-                for i in range(len(white_options)):
-                    if king_location in white_options[i]:
-                        position = (king_location[0] * Constants.TILE_SIZE + 1,
-                                    king_location[1] * Constants.TILE_SIZE + 1)
-                        drawer.draw_check(position, 'dark blue')
+        king_pos = check_for_check(black_pieces, white_options)
+        if king_pos:
+            drawer.draw_check(king_pos, 'dark blue')
+ 
 
     if selection != 100:
         valid_moves = check_valid_moves()
