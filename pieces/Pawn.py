@@ -1,4 +1,5 @@
 from pieces import Piece
+from Color import Color
 
 
 class Pawn(Piece):
@@ -9,7 +10,7 @@ class Pawn(Piece):
         moves_list = []
         x, y = self.location
 
-        if self.color == "white":
+        if self.color == Color.WHITE:
             if (
                 (x, y + 1) not in white_locations
                 and (x, y + 1) not in black_locations

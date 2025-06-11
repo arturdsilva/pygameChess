@@ -1,4 +1,5 @@
 from pieces import Piece
+from Color import Color
 
 
 class Queen(Piece):
@@ -7,7 +8,7 @@ class Queen(Piece):
 
     def check_options(self, white_locations, black_locations):
         moves_list = []
-        if self.color == "white":
+        if self.color == Color.WHITE:
             enemies_list = black_locations
             friends_list = white_locations
         else:

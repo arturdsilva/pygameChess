@@ -5,23 +5,24 @@ import pygame
 from Constants import Constants
 from Drawer import Drawer
 from pieces import Bishop, King, Knight, Pawn, Queen, Rook
+from Color import Color
 
 def create_white_pieces():
     return [
-        Rook((0, 0), 'white'), Knight((1, 0), 'white'), Bishop((2, 0), 'white'),
-        King((3, 0), 'white'), Queen((4, 0), 'white'), Bishop((5, 0), 'white'),
-        Knight((6, 0), 'white'), Rook((7, 0), 'white'),
-        Pawn((0, 1), 'white'), Pawn((1, 1), 'white'), Pawn((2, 1), 'white'), Pawn((3, 1), 'white'),
-        Pawn((4, 1), 'white'), Pawn((5, 1), 'white'), Pawn((6, 1), 'white'), Pawn((7, 1), 'white'),
+        Rook((0, 0), Color.WHITE), Knight((1, 0), Color.WHITE), Bishop((2, 0), Color.WHITE),
+        King((3, 0), Color.WHITE), Queen((4, 0), Color.WHITE), Bishop((5, 0), Color.WHITE),
+        Knight((6, 0), Color.WHITE), Rook((7, 0), Color.WHITE),
+        Pawn((0, 1), Color.WHITE), Pawn((1, 1), Color.WHITE), Pawn((2, 1), Color.WHITE), Pawn((3, 1), Color.WHITE),
+        Pawn((4, 1), Color.WHITE), Pawn((5, 1), Color.WHITE), Pawn((6, 1), Color.WHITE), Pawn((7, 1), Color.WHITE),
     ]
 
 def create_black_pieces():
     return [
-        Rook((0, 7), 'black'), Knight((1, 7), 'black'), Bishop((2, 7), 'black'),
-        King((3, 7), 'black'), Queen((4, 7), 'black'), Bishop((5, 7), 'black'),
-        Knight((6, 7), 'black'), Rook((7, 7), 'black'),
-        Pawn((0, 6), 'black'), Pawn((1, 6), 'black'), Pawn((2, 6), 'black'), Pawn((3, 6), 'black'),
-        Pawn((4, 6), 'black'), Pawn((5, 6), 'black'), Pawn((6, 6), 'black'), Pawn((7, 6), 'black'),
+        Rook((0, 7), Color.BLACK), Knight((1, 7), Color.BLACK), Bishop((2, 7), Color.BLACK),
+        King((3, 7), Color.BLACK), Queen((4, 7), Color.BLACK), Bishop((5, 7), Color.BLACK),
+        Knight((6, 7), Color.BLACK), Rook((7, 7), Color.BLACK),
+        Pawn((0, 6), Color.BLACK), Pawn((1, 6), Color.BLACK), Pawn((2, 6), Color.BLACK), Pawn((3, 6), Color.BLACK),
+        Pawn((4, 6), Color.BLACK), Pawn((5, 6), Color.BLACK), Pawn((6, 6), Color.BLACK), Pawn((7, 6), Color.BLACK),
     ]
 
 # function to check all pieces valid options on board
