@@ -69,7 +69,7 @@ captured_pieces_white = []
 captured_pieces_black = []
 # 0 - whites turn no selection: 1-whites turn piece selected: 2- black turn no selection, 3 - black turn piece selected
 turn_step = 0
-selection = 100
+selection = None
 valid_moves = []
 winner = ''
 game_over = False
@@ -95,7 +95,7 @@ while run:
             drawer.draw_check(king_pos, 'dark blue')
  
 
-    if selection != 100:
+    if selection is not None:
         valid_moves = check_valid_moves()
         drawer.draw_valid(valid_moves, turn_step)
     # event handling
@@ -113,7 +113,7 @@ while run:
                     selection = white_locations.index(click_coords)
                     if turn_step == 0:
                         turn_step = 1
-                if click_coords in valid_moves and selection != 100:
+                if click_coords in valid_moves and selection is not None:
                     white_locations[selection] = click_coords
                     white_pieces[selection].move_to(click_coords)
                     if click_coords in black_locations:
@@ -126,7 +126,7 @@ while run:
                     black_options = check_options(black_pieces, white_locations, black_locations) 
                     white_options = check_options(white_pieces, white_locations, black_locations)
                     turn_step = 2
-                    selection = 100
+                    selection = None
                     valid_moves = []
             if turn_step > 1:
                 if click_coords == (8, 8) or click_coords == (9, 8):
@@ -135,7 +135,7 @@ while run:
                     selection = black_locations.index(click_coords)
                     if turn_step == 2:
                         turn_step = 3
-                if click_coords in valid_moves and selection != 100:
+                if click_coords in valid_moves and selection is not None:
                     black_locations[selection] = click_coords
                     black_pieces[selection].move_to(click_coords)
                     if click_coords in white_locations:
@@ -148,7 +148,7 @@ while run:
                     black_options = check_options(black_pieces, white_locations, black_locations) 
                     white_options = check_options(white_pieces, white_locations, black_locations)
                     turn_step = 0
-                    selection = 100
+                    selection = None
                     valid_moves = []
         if event.type == pygame.KEYDOWN and game_over:
             if event.key == pygame.K_RETURN:
@@ -161,7 +161,7 @@ while run:
                 captured_pieces_white = []
                 captured_pieces_black = []
                 turn_step = 0
-                selection = 100
+                selection = None
                 valid_moves = []
                 black_options = check_options(black_pieces, white_locations, black_locations) 
                 white_options = check_options(white_pieces, white_locations, black_locations)
