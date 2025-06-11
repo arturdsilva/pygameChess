@@ -42,17 +42,18 @@ def check_valid_moves():
     valid_options = options_list[selection]
     return valid_options
 
+def get_locations(pieces):
+    return [p.location for p in pieces]
+
 pygame.init()
 screen = pygame.display.set_mode([Constants.WIDTH, Constants.HEIGHT])
 pygame.display.set_caption('Two-Player Pygame Chess!')
 timer = pygame.time.Clock()
 # game variables and images
 white_pieces = create_white_pieces()
-white_locations = [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0),
-                   (0, 1), (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1)]
+white_locations = get_locations(white_pieces)
 black_pieces = create_black_pieces()
-black_locations = [(0, 7), (1, 7), (2, 7), (3, 7), (4, 7), (5, 7), (6, 7), (7, 7),
-                   (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6), (6, 6), (7, 6)]
+black_locations = get_locations(black_pieces)
 captured_pieces_white = []
 captured_pieces_black = []
 # 0 - whites turn no selection: 1-whites turn piece selected: 2- black turn no selection, 3 - black turn piece selected
@@ -151,11 +152,9 @@ while run:
                 game_over = False
                 winner = ''
                 white_pieces = create_white_pieces()
-                white_locations = [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0),
-                                   (0, 1), (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1)]
+                white_locations = get_locations(white_pieces)
                 black_pieces = create_black_pieces()
-                black_locations = [(0, 7), (1, 7), (2, 7), (3, 7), (4, 7), (5, 7), (6, 7), (7, 7),
-                                   (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6), (6, 6), (7, 6)]
+                black_locations = get_locations(black_pieces)
                 captured_pieces_white = []
                 captured_pieces_black = []
                 turn_step = 0
