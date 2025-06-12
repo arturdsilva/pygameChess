@@ -4,6 +4,7 @@
 import pygame
 from Constants import Constants
 from Drawer import Drawer
+from Board import Board
 from pieces import Bishop, King, Knight, Pawn, Queen, Rook
 from Color import Color
 
@@ -26,21 +27,12 @@ def create_black_pieces():
     ]
 
 # function to check all pieces valid options on board
-def check_options(pieces, white_locations, black_locations):
+def check_options(pieces, board):
     all_moves_list = []
     for piece in pieces:
-        moves = piece.check_options(white_locations, black_locations)
+        moves = piece.check_options(board)
         all_moves_list.append(moves)
     return all_moves_list
-
-# check for valid moves for just selected piece
-def check_valid_moves():
-    if turn_step < 2:
-        options_list = white_options
-    else:
-        options_list = black_options
-    valid_options = options_list[selection]
-    return valid_options
 
 def check_for_check(pieces, enemy_options):
     for piece in pieces:
@@ -53,51 +45,45 @@ def check_for_check(pieces, enemy_options):
                     return pos
     return None
 
-def get_locations(pieces):
-    return [p.location for p in pieces]
-
 pygame.init()
 screen = pygame.display.set_mode([Constants.WIDTH, Constants.HEIGHT])
 pygame.display.set_caption('Two-Player Pygame Chess!')
 timer = pygame.time.Clock()
 # game variables and images
-white_pieces = create_white_pieces()
-white_locations = get_locations(white_pieces)
-black_pieces = create_black_pieces()
-black_locations = get_locations(black_pieces)
-captured_pieces_white = []
-captured_pieces_black = []
-# 0 - whites turn no selection: 1-whites turn piece selected: 2- black turn no selection, 3 - black turn piece selected
+board = Board()
+# 0 - whites turn
+# 1 - black turn
 turn_step = 0
-selection = None
+selected_piece = None
 valid_moves = []
 winner = ''
 game_over = False
 drawer = Drawer(screen)
 
 # main game loop
-black_options = check_options(black_pieces,white_locations, black_locations) 
-white_options = check_options(white_pieces, white_locations, black_locations)
+black_options = check_options(board.black_pieces, board) 
+white_options = check_options(board.white_pieces, board)
 run = True
 while run:
     timer.tick(Constants.FPS)
     drawer.draw_board(turn_step)
-    drawer.draw_pieces(white_pieces, black_pieces, turn_step, selection)
-    drawer.draw_captured(captured_pieces_white, captured_pieces_black)
+    drawer.draw_pieces(board, turn_step, selected_piece)
+    drawer.draw_captured(board)
 
-    if turn_step < 2:
-        king_pos = check_for_check(white_pieces, black_options)
+    if turn_step == 0:
+        king_pos = check_for_check(board.white_pieces, black_options)
         if king_pos:
             drawer.draw_check(king_pos, 'dark red')
     else:
-        king_pos = check_for_check(black_pieces, white_options)
+        king_pos = check_for_check(board.black_pieces, white_options)
         if king_pos:
             drawer.draw_check(king_pos, 'dark blue')
  
 
-    if selection is not None:
-        valid_moves = check_valid_moves()
+    if selected_piece is not None:
+        valid_moves = selected_piece.check_options(board)
         drawer.draw_valid(valid_moves, turn_step)
+
     # event handling
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -105,66 +91,61 @@ while run:
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and not game_over:
             x_coord = event.pos[0] // Constants.TILE_SIZE
             y_coord = event.pos[1] // Constants.TILE_SIZE
-            click_coords = (x_coord, y_coord)
-            if turn_step <= 1:
-                if click_coords == (8, 8) or click_coords == (9, 8):
+            click_location = (x_coord, y_coord)
+
+            if turn_step == 0:
+                if click_location == (8, 8) or click_location == (9, 8):
                     winner = 'black'
-                if click_coords in white_locations:
-                    selection = white_locations.index(click_coords)
-                    if turn_step == 0:
-                        turn_step = 1
-                if click_coords in valid_moves and selection is not None:
-                    white_locations[selection] = click_coords
-                    white_pieces[selection].move_to(click_coords)
-                    if click_coords in black_locations:
-                        black_piece = black_locations.index(click_coords)
-                        captured_pieces_white.append(black_pieces[black_piece])
-                        if isinstance(black_pieces[black_piece], King):
+
+                clicked_piece = board.get_piece_at_location(click_location)
+
+                if clicked_piece and clicked_piece.color == Color.WHITE:
+                    selected_piece = clicked_piece
+
+                elif selected_piece and click_location in valid_moves:
+                    if click_location in board.black_locations:
+                        black_piece = board.get_piece_at_location(click_location)
+                        board.remove_piece(black_piece)
+                        if isinstance(black_piece, King):
                             winner = 'white'
-                        black_pieces.pop(black_piece)
-                        black_locations.pop(black_piece)
-                    black_options = check_options(black_pieces, white_locations, black_locations) 
-                    white_options = check_options(white_pieces, white_locations, black_locations)
-                    turn_step = 2
-                    selection = None
+                    selected_piece.move_to(click_location)
+                    black_options = check_options(board.black_pieces, board) 
+                    white_options = check_options(board.white_pieces, board)
+                    turn_step = 1
+                    selected_piece = None
                     valid_moves = []
-            if turn_step > 1:
-                if click_coords == (8, 8) or click_coords == (9, 8):
+
+            elif turn_step == 1:
+                if click_location == (8, 8) or click_location == (9, 8):
                     winner = 'white'
-                if click_coords in black_locations:
-                    selection = black_locations.index(click_coords)
-                    if turn_step == 2:
-                        turn_step = 3
-                if click_coords in valid_moves and selection is not None:
-                    black_locations[selection] = click_coords
-                    black_pieces[selection].move_to(click_coords)
-                    if click_coords in white_locations:
-                        white_piece = white_locations.index(click_coords)
-                        captured_pieces_black.append(white_pieces[white_piece])
-                        if isinstance(white_pieces[white_piece], King):
+
+                clicked_piece = board.get_piece_at_location(click_location)
+
+                if clicked_piece and clicked_piece.color == Color.BLACK:
+                    selected_piece = clicked_piece
+                elif selected_piece and click_location in valid_moves:
+                    if click_location in board.white_locations:
+                        white_piece = board.get_piece_at_location(click_location)
+                        board.remove_piece(white_piece)
+                        if isinstance(white_piece, King):
                             winner = 'black'
-                        white_pieces.pop(white_piece)
-                        white_locations.pop(white_piece)
-                    black_options = check_options(black_pieces, white_locations, black_locations) 
-                    white_options = check_options(white_pieces, white_locations, black_locations)
+                    selected_piece.move_to(click_location)
+                    black_options = check_options(board.black_pieces, board) 
+                    white_options = check_options(board.white_pieces, board)
                     turn_step = 0
-                    selection = None
+                    selected_piece = None
                     valid_moves = []
+
         if event.type == pygame.KEYDOWN and game_over:
             if event.key == pygame.K_RETURN:
                 game_over = False
                 winner = ''
-                white_pieces = create_white_pieces()
-                white_locations = get_locations(white_pieces)
-                black_pieces = create_black_pieces()
-                black_locations = get_locations(black_pieces)
-                captured_pieces_white = []
-                captured_pieces_black = []
+                board = Board()
                 turn_step = 0
-                selection = None
+                selected_piece = None
                 valid_moves = []
-                black_options = check_options(black_pieces, white_locations, black_locations) 
-                white_options = check_options(white_pieces, white_locations, black_locations)
+                black_options = check_options(board.black_pieces, board) 
+                white_options = check_options(board.white_pieces, board)
 
     if winner != '':
         game_over = True

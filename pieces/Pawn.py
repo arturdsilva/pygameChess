@@ -6,9 +6,11 @@ class Pawn(Piece):
     def __init__(self, location, color):
         super().__init__(location, color)
 
-    def check_options(self, white_locations, black_locations):
+    def check_options(self, board):
         moves_list = []
         x, y = self.location
+        white_locations = board.white_locations
+        black_locations = board.black_locations
 
         if self.color == Color.WHITE:
             if (

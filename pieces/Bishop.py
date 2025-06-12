@@ -6,14 +6,14 @@ class Bishop(Piece):
     def __init__(self, location, color):
         super().__init__(location, color)
 
-    def check_options(self, white_locations, black_locations):
+    def check_options(self, board):
         moves_list = []
         if self.color == Color.WHITE:
-            enemies_list = black_locations
-            friends_list = white_locations
+            enemies_list = board.black_locations
+            friends_list = board.white_locations
         else:
-            friends_list = black_locations
-            enemies_list = white_locations
+            friends_list = board.black_locations
+            enemies_list = board.white_locations
         for i in range(4):  # up-right, up-left, down-right, down-left
             path = True
             chain = 1

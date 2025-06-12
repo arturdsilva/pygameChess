@@ -109,10 +109,8 @@ class Drawer:
             pygame.draw.rect(self.screen, "gold", [0, 800, Constants.WIDTH, 100], 5)
             pygame.draw.rect(self.screen, "gold", [800, 0, 200, Constants.HEIGHT], 5)
             status_text = [
-                "White: Select a Piece to Move!",
-                "White: Select a Destination!",
-                "Black: Select a Piece to Move!",
-                "Black: Select a Destination!",
+                "White's turn!",
+                "Black's turn!",
             ]
             self.screen.blit(
                 self.fonts["big"].render(status_text[turn_step], True, "black"), (20, 820)
@@ -132,10 +130,10 @@ class Drawer:
                     (Constants.TILE_SIZE * i, 800),
                     2,
                 )
-            self.screen.blit(self.fonts["big"].render("FORFEIT", True, "black"), (810, 830))
+            self.screen.blit(self.fonts["medium"].render("FORFEIT", True, "black"), (810, 830))
 
-    def draw_pieces(self, white_pieces, black_pieces, turn_step, selection):
-        for i, piece in enumerate(white_pieces):
+    def draw_pieces(self, board, turn_step, selected_piece):
+        for i, piece in enumerate(board.white_pieces):
             name = type(piece).__name__.lower()
             index = self.piece_list.index(name)
             x, y = piece.location
@@ -151,7 +149,7 @@ class Drawer:
                     (x * Constants.TILE_SIZE + 10, y * Constants.TILE_SIZE + 10),
                 )
 
-            if turn_step < 2 and selection == i:
+            if turn_step == 0 and piece == selected_piece:
                 pygame.draw.rect(
                     self.screen,
                     "red",
@@ -159,7 +157,7 @@ class Drawer:
                     2,
                 )
 
-        for i, piece in enumerate(black_pieces):
+        for i, piece in enumerate(board.black_pieces):
             name = type(piece).__name__.lower()
             index = self.piece_list.index(name)
             x, y = piece.location
@@ -175,7 +173,7 @@ class Drawer:
                     (x * Constants.TILE_SIZE + 10, y * Constants.TILE_SIZE + 10),
                 )
 
-            if turn_step >= 2 and selection == i:
+            if turn_step == 1 and piece == selected_piece:
                 pygame.draw.rect(
                     self.screen,
                     "blue",
@@ -184,7 +182,7 @@ class Drawer:
                 )
 
     def draw_valid(self, moves, turn_step):
-        if turn_step < 2:
+        if turn_step == 0:
             color = "red"
         else:
             color = "blue"
@@ -199,14 +197,14 @@ class Drawer:
                 5,
             )
 
-    def draw_captured(self, captured_pieces_white, captured_pieces_black):
-        for i in range(len(captured_pieces_white)):
-            captured_piece = captured_pieces_white[i]
+    def draw_captured(self, board):
+        for i in range(len(board.captured_white_pieces)):
+            captured_piece = board.captured_white_pieces[i]
             piece_name = type(captured_piece).__name__.lower()
             index = self.piece_list.index(piece_name)
             self.screen.blit(self.small_black_images[index], (825, 5 + 50 * i))
-        for i in range(len(captured_pieces_black)):
-            captured_piece = captured_pieces_black[i]
+        for i in range(len(board.captured_black_pieces)):
+            captured_piece = board.captured_black_pieces[i]
             piece_name = type(captured_piece).__name__.lower()
             index = self.piece_list.index(piece_name)
             self.screen.blit(self.small_white_images[index], (925, 5 + 50 * i))

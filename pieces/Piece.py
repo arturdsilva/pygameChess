@@ -10,5 +10,5 @@ class Piece(ABC):
         self.location = location
 
     @abstractmethod
-    def check_options(self, white_locations, black_locations):
+    def check_options(self, board):
         pass

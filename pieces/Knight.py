@@ -6,14 +6,14 @@ class Knight(Piece):
     def __init__(self, location, color):
         super().__init__(location, color)
 
-    def check_options(self, white_locations, black_locations):
+    def check_options(self, board):
         moves_list = []
         if self.color == Color.WHITE:
-            enemies_list = black_locations
-            friends_list = white_locations
+            enemies_list = board.black_locations
+            friends_list = board.white_locations
         else:
-            friends_list = black_locations
-            enemies_list = white_locations
+            friends_list = board.black_locations
+            enemies_list = board.white_locations
         # 8 squares to check for knights, they can go two squares in one direction and one in another
         targets = [
             (1, 2),
