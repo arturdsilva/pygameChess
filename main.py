@@ -51,7 +51,6 @@ while run:
         drawer.draw_check(king_in_check.location, check_color)
 
     if selected_piece is not None:
-        valid_moves = selected_piece.check_options(board)
         drawer.draw_valid(valid_moves, turn_step)
 
     # event handling
@@ -71,6 +70,7 @@ while run:
 
                 if clicked_piece and clicked_piece.color == Color.WHITE:
                     selected_piece = clicked_piece
+                    valid_moves = selected_piece.check_options(board)
 
                 elif selected_piece and click_location in valid_moves:
                     if click_location in board.black_locations:
@@ -91,6 +91,7 @@ while run:
 
                 if clicked_piece and clicked_piece.color == Color.BLACK:
                     selected_piece = clicked_piece
+                    valid_moves = selected_piece.check_options(board)
                 elif selected_piece and click_location in valid_moves:
                     if click_location in board.white_locations:
                         white_piece = board.get_piece_at_location(click_location)
