@@ -4,8 +4,8 @@ import pygame
 from Constants import Constants
 from Drawer import Drawer
 from Board import Board
-from pieces import Bishop, King, Knight, Pawn, Queen, Rook
 from Color import Color
+from pieces import King
 
 
 def check_for_check(board):
