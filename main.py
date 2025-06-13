@@ -23,7 +23,7 @@ screen = pygame.display.set_mode([Constants.WIDTH, Constants.HEIGHT])
 pygame.display.set_caption("Two-Player Pygame Chess!")
 timer = pygame.time.Clock()
 # game variables and images
-board = Board()
+board = Board.create_standard_board()
 # 0 - whites turn
 # 1 - black turn
 turn_step = 0
@@ -107,7 +107,7 @@ while run:
             if event.key == pygame.K_RETURN:
                 game_over = False
                 winner = ""
-                board = Board()
+                board = Board.create_standard_board()
                 turn_step = 0
                 selected_piece = None
                 valid_moves = []
