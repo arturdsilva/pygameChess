@@ -8,26 +8,13 @@ from pieces import Bishop, King, Knight, Pawn, Queen, Rook
 from Color import Color
 
 
-# function to check all pieces valid options on board
-def check_options(pieces, board):
-    all_moves_list = []
-    for piece in pieces:
-        moves = piece.check_options(board)
-        all_moves_list.append(moves)
-    return all_moves_list
-
-
-def check_for_check(pieces, enemy_options):
-    for piece in pieces:
-        if isinstance(piece, King):
-            king_location = piece.location
-            for moves in enemy_options:
-                if king_location in moves:
-                    pos = (
-                        king_location[0] * Constants.TILE_SIZE + 1,
-                        king_location[1] * Constants.TILE_SIZE + 1,
-                    )
-                    return pos
+def check_for_check(board):
+    for piece in board.pieces:
+        options = piece.check_options(board)
+        for option in options:
+            target = board.get_piece_at_location(option)
+            if isinstance(target, King):
+                return target
     return None
 
 
@@ -47,8 +34,6 @@ game_over = False
 drawer = Drawer(screen)
 
 # main game loop
-black_options = check_options(board.black_pieces, board)
-white_options = check_options(board.white_pieces, board)
 run = True
 while run:
     timer.tick(Constants.FPS)
@@ -56,14 +41,14 @@ while run:
     drawer.draw_pieces(board, turn_step, selected_piece)
     drawer.draw_captured(board)
 
-    if turn_step == 0:
-        king_pos = check_for_check(board.white_pieces, black_options)
-        if king_pos:
-            drawer.draw_check(king_pos, "dark red")
-    else:
-        king_pos = check_for_check(board.black_pieces, white_options)
-        if king_pos:
-            drawer.draw_check(king_pos, "dark blue")
+    king_in_check = check_for_check(board)
+    if king_in_check is not None:
+        check_color = None
+        if king_in_check.color == Color.WHITE:
+            check_color = "dark red"
+        else:
+            check_color = "dark blue"
+        drawer.draw_check(king_in_check.location, check_color)
 
     if selected_piece is not None:
         valid_moves = selected_piece.check_options(board)
@@ -94,8 +79,6 @@ while run:
                         if isinstance(black_piece, King):
                             winner = "white"
                     selected_piece.move_to(click_location)
-                    black_options = check_options(board.black_pieces, board)
-                    white_options = check_options(board.white_pieces, board)
                     turn_step = 1
                     selected_piece = None
                     valid_moves = []
@@ -115,8 +98,6 @@ while run:
                         if isinstance(white_piece, King):
                             winner = "black"
                     selected_piece.move_to(click_location)
-                    black_options = check_options(board.black_pieces, board)
-                    white_options = check_options(board.white_pieces, board)
                     turn_step = 0
                     selected_piece = None
                     valid_moves = []
@@ -129,8 +110,6 @@ while run:
                 turn_step = 0
                 selected_piece = None
                 valid_moves = []
-                black_options = check_options(board.black_pieces, board)
-                white_options = check_options(board.white_pieces, board)
 
     if winner != "":
         game_over = True

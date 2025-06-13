@@ -79,7 +79,7 @@ class Drawer:
         self.flash_counter = 0
 
     def draw_board(self, turn_step):
-        self.screen.fill('dark gray')
+        self.screen.fill("dark gray")
         for i in range(32):
             column = i % 4
             row = i // 4
@@ -113,7 +113,8 @@ class Drawer:
                 "Black's turn!",
             ]
             self.screen.blit(
-                self.fonts["big"].render(status_text[turn_step], True, "black"), (20, 820)
+                self.fonts["big"].render(status_text[turn_step], True, "black"),
+                (20, 820),
             )
             for i in range(9):
                 pygame.draw.line(
@@ -130,7 +131,9 @@ class Drawer:
                     (Constants.TILE_SIZE * i, 800),
                     2,
                 )
-            self.screen.blit(self.fonts["medium"].render("FORFEIT", True, "black"), (810, 830))
+            self.screen.blit(
+                self.fonts["medium"].render("FORFEIT", True, "black"), (810, 830)
+            )
 
     def draw_pieces(self, board, turn_step, selected_piece):
         for i, piece in enumerate(board.white_pieces):
@@ -153,7 +156,12 @@ class Drawer:
                 pygame.draw.rect(
                     self.screen,
                     "red",
-                    [x * Constants.TILE_SIZE + 1, y * Constants.TILE_SIZE + 1, Constants.TILE_SIZE, Constants.TILE_SIZE],
+                    [
+                        x * Constants.TILE_SIZE + 1,
+                        y * Constants.TILE_SIZE + 1,
+                        Constants.TILE_SIZE,
+                        Constants.TILE_SIZE,
+                    ],
                     2,
                 )
 
@@ -177,7 +185,12 @@ class Drawer:
                 pygame.draw.rect(
                     self.screen,
                     "blue",
-                    [x * Constants.TILE_SIZE + 1, y * Constants.TILE_SIZE + 1, Constants.TILE_SIZE, Constants.TILE_SIZE],
+                    [
+                        x * Constants.TILE_SIZE + 1,
+                        y * Constants.TILE_SIZE + 1,
+                        Constants.TILE_SIZE,
+                        Constants.TILE_SIZE,
+                    ],
                     2,
                 )
 
@@ -209,7 +222,7 @@ class Drawer:
             index = self.piece_list.index(piece_name)
             self.screen.blit(self.small_white_images[index], (925, 5 + 50 * i))
 
-    def draw_check(self, pos, color):
+    def draw_check(self, location, color):
         if self.flash_counter < 30:
             self.flash_counter += 1
         else:
@@ -218,11 +231,22 @@ class Drawer:
             pygame.draw.rect(
                 self.screen,
                 color,
-                [pos[0], pos[1], Constants.TILE_SIZE, Constants.TILE_SIZE],
+                [
+                    location[0] * Constants.TILE_SIZE,
+                    location[1] * Constants.TILE_SIZE,
+                    Constants.TILE_SIZE,
+                    Constants.TILE_SIZE,
+                ],
                 5,
             )
 
     def draw_game_over(self, winner):
         pygame.draw.rect(self.screen, "black", [200, 200, 400, 70])
-        self.screen.blit(self.fonts["default"].render(f"{winner} won the game!", True, "white"), (210, 210))
-        self.screen.blit(self.fonts["default"].render(f"Press ENTER to Restart!", True, "white"), (210, 240))
+        self.screen.blit(
+            self.fonts["default"].render(f"{winner} won the game!", True, "white"),
+            (210, 210),
+        )
+        self.screen.blit(
+            self.fonts["default"].render(f"Press ENTER to Restart!", True, "white"),
+            (210, 240),
+        )
