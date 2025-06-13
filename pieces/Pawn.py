@@ -1,0 +1,49 @@
+from pieces import Piece
+from Color import Color
+
+
+class Pawn(Piece):
+    def __init__(self, location, color):
+        super().__init__(location, color)
+
+    def check_options(self, board):
+        moves_list = []
+        x, y = self.location
+        white_locations = board.white_locations
+        black_locations = board.black_locations
+
+        if self.color == Color.WHITE:
+            if (
+                (x, y + 1) not in white_locations
+                and (x, y + 1) not in black_locations
+                and y < 8
+            ):
+                moves_list.append((x, y + 1))
+            if (
+                (x, y + 2) not in white_locations
+                and (x, y + 2) not in black_locations
+                and y == 1
+            ):
+                moves_list.append((x, y + 2))
+            if (x + 1, y + 1) in black_locations:
+                moves_list.append((x + 1, y + 1))
+            if (x - 1, y + 1) in black_locations:
+                moves_list.append((x - 1, y + 1))
+        else:
+            if (
+                (x, y - 1) not in white_locations
+                and (x, y - 1) not in black_locations
+                and y > 0
+            ):
+                moves_list.append((x, y - 1))
+            if (
+                (x, y - 2) not in white_locations
+                and (x, y - 2) not in black_locations
+                and y == 6
+            ):
+                moves_list.append((x, y - 2))
+            if (x + 1, y - 1) in white_locations:
+                moves_list.append((x + 1, y - 1))
+            if (x - 1, y - 1) in white_locations:
+                moves_list.append((x - 1, y - 1))
+        return moves_list
