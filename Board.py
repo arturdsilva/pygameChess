@@ -1,5 +1,5 @@
 from Color import Color
-from PieceFactory import PieceFactory
+from pieces import Bishop, King, Knight, Pawn, Queen, Rook
 
 
 class Board:
@@ -10,11 +10,18 @@ class Board:
 
     def __init__(self):
         """Initialize an empty board"""
-        self.piece_factory = PieceFactory()
         self.white_pieces = []
         self.black_pieces = []
         self.captured_white_pieces = []
         self.captured_black_pieces = []
+        self.piece_types = {
+            "pawn": Pawn,
+            "rook": Rook,
+            "knight": Knight,
+            "bishop": Bishop,
+            "queen": Queen,
+            "king": King
+        }
         self.build_standard_board()
 
     def build_standard_board(self):
@@ -66,7 +73,9 @@ class Board:
             location: Tuple (x, y) representing the piece's position
             color: Enum value representing the piece's color
         """
-        piece = self.piece_factory.create_piece(piece_type, location, color)
+        piece_type = piece_type.lower()
+        piece_class = self.piece_types.get(piece_type)
+        piece = piece_class(location, color)
         if color == Color.WHITE:
             self.white_pieces.append(piece)
         else:
