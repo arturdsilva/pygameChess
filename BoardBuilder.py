@@ -94,7 +94,7 @@ class BoardBuilder:
             self.captured_black_pieces = black_captured
         return self
 
-    def build_standard_board(self):
+    def set_standard_board(self):
         """
         Build a standard chess board with all pieces in starting positions
         

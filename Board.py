@@ -1,7 +1,3 @@
-from Color import Color
-from BoardBuilder import BoardBuilder
-
-
 class Board:
     """
     Represents a chess board with white and black pieces.
@@ -14,28 +10,6 @@ class Board:
         self.black_pieces = []
         self.captured_white_pieces = []
         self.captured_black_pieces = []
-
-    @classmethod
-    def create_standard_board(cls):
-        """
-        Factory method to create a standard chess board
-        
-        Returns:
-            Board: A standard chess board with all pieces in starting positions
-        """
-        builder = BoardBuilder()
-        return builder.build_standard_board().build(cls)
-
-    @classmethod
-    def create_empty_board(cls):
-        """
-        Factory method to create an empty chess board
-        
-        Returns:
-            Board: An empty chess board with no pieces
-        """
-        builder = BoardBuilder()
-        return builder.build(cls)
 
     @property
     def pieces(self):

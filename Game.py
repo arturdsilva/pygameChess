@@ -1,6 +1,7 @@
 import pygame
 
 from Board import Board
+from BoardBuilder import BoardBuilder
 from pieces import King
 
 
@@ -22,7 +23,8 @@ class Game:
 
         self.screen = screen
         self.drawer = Drawer(screen)
-        self.board = Board.create_standard_board()
+        self.board_builder = BoardBuilder()
+        self.board = self.board_builder.set_standard_board().build(Board)
         self.winner = ""
         self.check_color = None
         self.current_state = PlayingState()
@@ -70,7 +72,8 @@ class Game:
 
     def reset(self):
         """Reset the game to its initial state"""
-        self.board = Board.create_standard_board()
+        self.board_builder = BoardBuilder()
+        self.board = self.board_builder.set_standard_board().build(Board)
         self.winner = ""
         self.check_color = None
 
