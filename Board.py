@@ -1,5 +1,5 @@
 from Color import Color
-from BoardBuilder import BoardBuilder
+from pieces import Bishop, King, Knight, Pawn, Queen, Rook
 
 
 class Board:
@@ -14,28 +14,25 @@ class Board:
         self.black_pieces = []
         self.captured_white_pieces = []
         self.captured_black_pieces = []
+        self.piece_types = {
+            "pawn": Pawn,
+            "rook": Rook,
+            "knight": Knight,
+            "bishop": Bishop,
+            "queen": Queen,
+            "king": King
+        }
+        self.build_standard_board()
 
-    @classmethod
-    def create_standard_board(cls):
+    def build_standard_board(self):
         """
-        Factory method to create a standard chess board
-        
-        Returns:
-            Board: A standard chess board with all pieces in starting positions
-        """
-        builder = BoardBuilder()
-        return builder.build_standard_board().build(cls)
+        Build a standard chess board with all pieces in starting positions
 
-    @classmethod
-    def create_empty_board(cls):
         """
-        Factory method to create an empty chess board
-        
-        Returns:
-            Board: An empty chess board with no pieces
-        """
-        builder = BoardBuilder()
-        return builder.build(cls)
+        self.add_back_rank(Color.BLACK, 7)
+        self.add_pawns(Color.BLACK, 6)
+        self.add_pawns(Color.WHITE, 1)
+        self.add_back_rank(Color.WHITE, 0)
 
     @property
     def pieces(self):
@@ -66,6 +63,47 @@ class Board:
             if piece.location == location:
                 return piece
         return None
+
+    def add_piece(self, piece_type, location, color):
+        """
+        Add a specific piece to the board
+
+        Args:
+            piece_type: String representing the type of piece
+            location: Tuple (x, y) representing the piece's position
+            color: Enum value representing the piece's color
+        """
+        piece_type = piece_type.lower()
+        piece_class = self.piece_types.get(piece_type)
+        piece = piece_class(location, color)
+        if color == Color.WHITE:
+            self.white_pieces.append(piece)
+        else:
+            self.black_pieces.append(piece)
+
+    def add_pawns(self, color, line):
+        """
+        Add a line of pawns at the initial position
+
+        Args:
+            color: Enum value representing the color of the pieces
+            line: Integer representing the line where the rank will be inserted
+        """
+        for i in range(8):
+            self.add_piece("pawn", (i, line), color)
+
+    def add_back_rank(self, color, line):
+        """
+        Add the back rank pieces (rook, knight, bishop, etc.)
+
+        Args:
+            color: Enum value representing the color of the pieces
+            line: Integer representing the line where the rank will be inserted
+        """
+        pieces_order = ["rook", "knight", "bishop", "king", "queen", "bishop",
+                        "knight", "rook"]
+        for i, piece_type in enumerate(pieces_order):
+            self.add_piece(piece_type, (i, line), color)
 
     def remove_piece(self, piece):
         """

@@ -22,7 +22,7 @@ class Game:
 
         self.screen = screen
         self.drawer = Drawer(screen)
-        self.board = Board.create_standard_board()
+        self.board = Board()
         self.winner = ""
         self.check_color = None
         self.current_state = PlayingState()
@@ -70,7 +70,7 @@ class Game:
 
     def reset(self):
         """Reset the game to its initial state"""
-        self.board = Board.create_standard_board()
+        self.board = Board()
         self.winner = ""
         self.check_color = None
 

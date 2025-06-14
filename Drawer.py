@@ -1,4 +1,5 @@
 import pygame
+
 from Constants import Constants
 from assets import Fonts
 
@@ -251,12 +252,14 @@ class Drawer:
             captured_piece = board.captured_white_pieces[i]
             piece_name = type(captured_piece).__name__.lower()
             index = self.piece_list.index(piece_name)
-            self.screen.blit(self.small_black_images[index], (825, 5 + 50 * i))
+            self.screen.blit(self.small_white_images[index],
+                             (825, 5 + 50 * i))
         for i in range(len(board.captured_black_pieces)):
             captured_piece = board.captured_black_pieces[i]
             piece_name = type(captured_piece).__name__.lower()
             index = self.piece_list.index(piece_name)
-            self.screen.blit(self.small_white_images[index], (925, 5 + 50 * i))
+            self.screen.blit(self.small_black_images[index],
+                             (925, 5 + 50 * i))
 
     def draw_check(self, location, color):
         """
