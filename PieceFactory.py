@@ -3,7 +3,13 @@ from Color import Color
 
 
 class PieceFactory:
+    """
+    Chess Piece Factory.
+    """
     def __init__(self):
+        """
+        Initializes the dictionary with the types of chess pieces.
+        """
         self._piece_types = {
             "pawn": Pawn,
             "rook": Rook,
