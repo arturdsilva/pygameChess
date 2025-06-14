@@ -7,7 +7,7 @@ class BoardBuilder:
     Builder pattern implementation for creating Board objects.
     Provides a fluent interface for board construction and configuration.
     """
-    
+
     def __init__(self):
         """Initialize a new BoardBuilder with empty piece collections"""
         self.piece_factory = PieceFactory()
@@ -15,7 +15,7 @@ class BoardBuilder:
         self.black_pieces = []
         self.captured_white_pieces = []
         self.captured_black_pieces = []
-    
+
     def add_piece(self, piece_type, location, color):
         """
         Add a specific piece to the board
@@ -34,53 +34,49 @@ class BoardBuilder:
         else:
             self.black_pieces.append(piece)
         return self
-    
-    def add_white_back_rank(self):
+
+    def add_back_rank(self, color, line=None):
         """
-        Add the white back rank pieces (rook, knight, bishop, etc.)
+        Add the back rank pieces (rook, knight, bishop, etc.)
+
+        Args:
+            color: Enum value representing the color of the pieces
+            line: Integer representing the line where the rank will be inserted
         
         Returns:
             self for method chaining
         """
-        pieces_order = ["rook", "knight", "bishop", "king", "queen", "bishop", "knight", "rook"]
+        if line is None:
+            if color == Color.WHITE:
+                line = 0
+            else:
+                line = 7
+        pieces_order = ["rook", "knight", "bishop", "king", "queen", "bishop",
+                        "knight", "rook"]
         for i, piece_type in enumerate(pieces_order):
-            self.add_piece(piece_type, (i, 0), Color.WHITE)
+            self.add_piece(piece_type, (i, line), color)
         return self
-    
-    def add_white_pawns(self):
+
+    def add_pawns(self, color, line=None):
         """
-        Add all white pawns
+        Add a line of pawns at the initial position
+
+        Args:
+            color: Enum value representing the color of the pieces
+            line: Integer representing the line where the rank will be inserted
         
         Returns:
             self for method chaining
         """
+        if line is None:
+            if color == Color.WHITE:
+                line = 1
+            else:
+                line = 6
         for i in range(8):
-            self.add_piece("pawn", (i, 1), Color.WHITE)
+            self.add_piece("pawn", (i, line), color)
         return self
-    
-    def add_black_back_rank(self):
-        """
-        Add the black back rank pieces (rook, knight, bishop, etc.)
-        
-        Returns:
-            self for method chaining
-        """
-        piece_types = ["rook", "knight", "bishop", "king", "queen", "bishop", "knight", "rook"]
-        for x, piece_type in enumerate(piece_types):
-            self.add_piece(piece_type, (x, 7), Color.BLACK)
-        return self
-    
-    def add_black_pawns(self):
-        """
-        Add all black pawns
-        
-        Returns:
-            self for method chaining
-        """
-        for x in range(8):
-            self.add_piece("pawn", (x, 6), Color.BLACK)
-        return self
-    
+
     def set_captured_pieces(self, white_captured=None, black_captured=None):
         """
         Set captured pieces
@@ -97,7 +93,7 @@ class BoardBuilder:
         if black_captured is not None:
             self.captured_black_pieces = black_captured
         return self
-    
+
     def build_standard_board(self):
         """
         Build a standard chess board with all pieces in starting positions
@@ -105,11 +101,11 @@ class BoardBuilder:
         Returns:
             self for method chaining
         """
-        return (self.add_white_back_rank()
-                .add_white_pawns()
-                .add_black_back_rank()
-                .add_black_pawns())
-    
+        return (self.add_back_rank(Color.WHITE)
+                .add_pawns(Color.WHITE)
+                .add_back_rank(Color.BLACK)
+                .add_pawns(Color.BLACK))
+
     def build(self, board_class):
         """
         Build and return the configured Board
