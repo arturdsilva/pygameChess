@@ -3,10 +3,34 @@ from Color import Color
 
 
 class Knight(Piece):
+    """
+    Represents the knight piece, which moves in an L-shape: two squares in one
+    direction and then one square perpendicular.
+    """
+
     def __init__(self, location, color):
+        """
+        Initializes the knight piece.
+
+        Args:
+            location (tuple): Represents the current position of the piece
+                on the squares of the board.
+            color: Represents the color of the piece.
+        """
+
         super().__init__(location, color)
 
     def check_options(self, board):
+        """
+        Check all valid movement options for the knight from its current position.
+
+        Args:
+            board (Board): represents the current board state.
+        Returns:
+            List[Tuple[int, int]]: moves_list (A list of valid (row, column)
+            positions the knight can legally move to)
+        """
+
         moves_list = []
         if self.color == Color.WHITE:
             enemies_list = board.black_locations
