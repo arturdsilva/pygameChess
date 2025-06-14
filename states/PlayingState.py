@@ -82,12 +82,8 @@ class PlayingState(AbstractGameState):
         if target_location in opponent_locations:
             captured_piece = game.board.get_piece_at_location(target_location)
             game.board.remove_piece(captured_piece)
-
-            # If king is captured, game over
             if isinstance(captured_piece, King):
                 game.winner = "white" if self.current_turn == 0 else "black"
-                game.change_state(GameOverState())
-                return
 
         # Move the piece
         self.selected_piece.move_to(target_location)
@@ -96,6 +92,10 @@ class PlayingState(AbstractGameState):
         self.current_turn = 1 if self.current_turn == 0 else 0
         self.selected_piece = None
         self.valid_moves = []
+
+        if game.winner != "":
+            game.change_state(GameOverState())
+            return
 
     def handle_key(self, game, key):
         """
