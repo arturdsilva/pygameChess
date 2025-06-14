@@ -3,10 +3,31 @@ from Color import Color
 
 
 class Bishop(Piece):
+    """
+    Represents the bishop piece, which moves any number of squares diagonally.
+    """
     def __init__(self, location, color):
+        """
+        Initializes the bishop piece.
+
+        Args:
+            location (tuple): Represents the current position of the piece
+                on the squares of the board.
+            color: Represents the color of the piece.
+        """
+
         super().__init__(location, color)
 
     def check_options(self, board):
+        """
+        Check all valid movement options for the bishop from its current position.
+
+        Args:
+            board (Board): represents the current board state.
+        Returns:
+            List[Tuple[int, int]]: moves_list (A list of valid (row, column)
+            positions the bishop can legally move to)
+        """
         moves_list = []
         if self.color == Color.WHITE:
             enemies_list = board.black_locations

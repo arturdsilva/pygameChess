@@ -5,7 +5,16 @@ from assets import Fonts
 
 
 class Drawer:
+    """
+    Responsible for drawing the board, pieces, valid moves and game messages.
+    """
     def __init__(self, screen):
+        """
+        Loads images of the pieces, fonts and prepares the screen for drawing.
+
+        Args:
+            screen: Game surface where will be drawn.
+        """
         black_queen = pygame.image.load("assets/images/black queen.png")
         black_queen = pygame.transform.scale(black_queen, (80, 80))
         black_queen_small = pygame.transform.scale(black_queen, (45, 45))
@@ -80,6 +89,12 @@ class Drawer:
         self.flash_counter = 0
 
     def draw_board(self, turn_step):
+        """
+        Draws the board, lines and text indicating the player's turn.
+
+        Args:
+            turn_step: turns of white(0) or black(1) pieces.
+        """
         self.screen.fill("dark gray")
         for i in range(32):
             column = i % 4
@@ -137,6 +152,14 @@ class Drawer:
             )
 
     def draw_pieces(self, board, turn_step, selected_piece):
+        """
+        Draws the pieces on the board and highlights the selected piece.
+
+        Args:
+            board: contains the white and black pieces.
+            turn_step: turns of white(0) or black(1) pieces.
+            selected_piece: selected piece.
+        """
         for i, piece in enumerate(board.white_pieces):
             name = type(piece).__name__.lower()
             index = self.piece_list.index(name)
@@ -196,6 +219,13 @@ class Drawer:
                 )
 
     def draw_valid(self, moves, turn_step):
+        """
+        Draws circles at valid move positions.
+
+        Args:
+            moves: list of positions (x, y).
+            turn_step: turns of white(0) or black(1) pieces.
+        """
         if turn_step == 0:
             color = "red"
         else:
@@ -212,6 +242,12 @@ class Drawer:
             )
 
     def draw_captured(self, board):
+        """
+        Shows captured pieces in the side panel.
+
+        Args:
+            board (Board): represents the current board state.
+        """
         for i in range(len(board.captured_white_pieces)):
             captured_piece = board.captured_white_pieces[i]
             piece_name = type(captured_piece).__name__.lower()
@@ -226,6 +262,14 @@ class Drawer:
                              (925, 5 + 50 * i))
 
     def draw_check(self, location, color):
+        """
+        Highlights the king in check with a blinking outline.
+
+        Args:
+            location (tuple): Represents the current position of the piece
+                on the squares of the board.
+            color: Represents the color of the piece.
+        """
         if self.flash_counter < 30:
             self.flash_counter += 1
         else:
@@ -244,6 +288,12 @@ class Drawer:
             )
 
     def draw_game_over(self, winner):
+        """
+        Displays game end message with the winner.
+
+        Args:
+            winner: text indicating who won.
+        """
         pygame.draw.rect(self.screen, "black", [200, 200, 400, 70])
         self.screen.blit(
             self.fonts["default"].render(f"{winner} won the game!", True, "white"),
