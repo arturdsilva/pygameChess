@@ -2,12 +2,14 @@ import pygame
 
 from Constants import Constants
 from assets import Fonts
+from Color import Color
 
 
 class Drawer:
     """
     Responsible for drawing the board, pieces, valid moves and game messages.
     """
+
     def __init__(self, screen):
         """
         Loads images of the pieces, fonts and prepares the screen for drawing.
@@ -88,7 +90,7 @@ class Drawer:
         self.piece_list = ["pawn", "queen", "king", "knight", "rook", "bishop"]
         self.flash_counter = 0
 
-    def draw_board(self, turn_step):
+    def draw_board(self, current_turn):
         """
         Draws the board, lines and text indicating the player's turn.
 
@@ -124,12 +126,9 @@ class Drawer:
             pygame.draw.rect(self.screen, "gray", [0, 800, Constants.WIDTH, 100])
             pygame.draw.rect(self.screen, "gold", [0, 800, Constants.WIDTH, 100], 5)
             pygame.draw.rect(self.screen, "gold", [800, 0, 200, Constants.HEIGHT], 5)
-            status_text = [
-                "White's turn!",
-                "Black's turn!",
-            ]
+            status_text = {Color.WHITE: "White's turn!", Color.BLACK: "Black's turn!"}
             self.screen.blit(
-                self.fonts["big"].render(status_text[turn_step], True, "black"),
+                self.fonts["big"].render(status_text[current_turn], True, "black"),
                 (20, 820),
             )
             for i in range(9):
@@ -151,7 +150,7 @@ class Drawer:
                 self.fonts["medium"].render("FORFEIT", True, "black"), (810, 830)
             )
 
-    def draw_pieces(self, board, turn_step, selected_piece):
+    def draw_pieces(self, board, current_turn, selected_piece):
         """
         Draws the pieces on the board and highlights the selected piece.
 
@@ -176,7 +175,7 @@ class Drawer:
                     (x * Constants.TILE_SIZE + 10, y * Constants.TILE_SIZE + 10),
                 )
 
-            if turn_step == 0 and piece == selected_piece:
+            if current_turn == Color.WHITE and piece == selected_piece:
                 pygame.draw.rect(
                     self.screen,
                     "red",
@@ -205,7 +204,7 @@ class Drawer:
                     (x * Constants.TILE_SIZE + 10, y * Constants.TILE_SIZE + 10),
                 )
 
-            if turn_step == 1 and piece == selected_piece:
+            if current_turn == Color.BLACK and piece == selected_piece:
                 pygame.draw.rect(
                     self.screen,
                     "blue",
@@ -218,7 +217,7 @@ class Drawer:
                     2,
                 )
 
-    def draw_valid(self, moves, turn_step):
+    def draw_valid(self, moves, current_turn):
         """
         Draws circles at valid move positions.
 
@@ -226,7 +225,7 @@ class Drawer:
             moves: list of positions (x, y).
             turn_step: turns of white(0) or black(1) pieces.
         """
-        if turn_step == 0:
+        if current_turn == Color.WHITE:
             color = "red"
         else:
             color = "blue"
@@ -252,14 +251,12 @@ class Drawer:
             captured_piece = board.captured_white_pieces[i]
             piece_name = type(captured_piece).__name__.lower()
             index = self.piece_list.index(piece_name)
-            self.screen.blit(self.small_white_images[index],
-                             (825, 5 + 50 * i))
+            self.screen.blit(self.small_white_images[index], (825, 5 + 50 * i))
         for i in range(len(board.captured_black_pieces)):
             captured_piece = board.captured_black_pieces[i]
             piece_name = type(captured_piece).__name__.lower()
             index = self.piece_list.index(piece_name)
-            self.screen.blit(self.small_black_images[index],
-                             (925, 5 + 50 * i))
+            self.screen.blit(self.small_black_images[index], (925, 5 + 50 * i))
 
     def draw_check(self, location, color):
         """

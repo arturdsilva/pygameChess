@@ -14,29 +14,35 @@ class PlayingState(AbstractGameState):
         """Initialize the playing state"""
         self.selected_piece = None
         self.valid_moves = []
-        self.current_turn = 0  # 0 for white, 1 for black
+        self.current_turn = Color.WHITE
 
     @property
     def current_player_color(self):
         """Get the color of the current player"""
-        return Color.WHITE if self.current_turn == 0 else Color.BLACK
+        return self.current_turn
 
     @property
     def opponent_color(self):
         """Get the color of the opponent player"""
-        return Color.BLACK if self.current_turn == 0 else Color.WHITE
+        return Color.BLACK if self.current_turn == Color.WHITE else Color.WHITE
 
     @property
     def opponent_pieces(self):
         """Get opponent's pieces based on the current turn"""
-        return lambda \
-                board: board.black_pieces if self.current_turn == 0 else board.white_pieces
+        return lambda board: (
+            board.black_pieces
+            if self.current_turn == Color.WHITE
+            else board.white_pieces
+        )
 
     @property
     def opponent_locations(self):
         """Get opponent's piece locations based on the current turn"""
-        return lambda \
-                board: board.black_locations if self.current_turn == 0 else board.white_locations
+        return lambda board: (
+            board.black_locations
+            if self.current_turn == Color.WHITE
+            else board.white_locations
+        )
 
     @property
     def check_color(self):
@@ -46,13 +52,13 @@ class PlayingState(AbstractGameState):
     def handle_click(self, game, click_location):
         """
         Handle click event during gameplay
-        
+
         Args:
             game: Game instance
             click_location: Tuple (x, y) representing board coordinates
         """
         if click_location == (8, 8) or click_location == (9, 8):
-            game.winner = "black" if self.current_turn == 0 else "white"
+            game.winner = "black" if self.current_turn == Color.WHITE else "white"
             game.change_state(GameOverState())
             return
 
@@ -68,7 +74,7 @@ class PlayingState(AbstractGameState):
     def _handle_move(self, game, target_location):
         """
         Handle piece movement and capture logic
-        
+
         Args:
             game: Game instance
             target_location: Tuple (x, y) representing the target location
@@ -78,11 +84,13 @@ class PlayingState(AbstractGameState):
             captured_piece = game.board.get_piece_at_location(target_location)
             game.board.remove_piece(captured_piece)
             if isinstance(captured_piece, King):
-                game.winner = "white" if self.current_turn == 0 else "black"
+                game.winner = "white" if self.current_turn == Color.WHITE else "black"
 
         self.selected_piece.move_to(target_location)
 
-        self.current_turn = 1 if self.current_turn == 0 else 0
+        self.current_turn = (
+            Color.BLACK if self.current_turn == Color.WHITE else Color.WHITE
+        )
         self.selected_piece = None
         self.valid_moves = []
 
@@ -93,7 +101,7 @@ class PlayingState(AbstractGameState):
     def handle_key(self, game, key):
         """
         Handle keyboard input during gameplay
-        
+
         Args:
             game: Game instance
             key: Key code that was pressed
@@ -104,7 +112,7 @@ class PlayingState(AbstractGameState):
     def update(self, game):
         """
         Update game state during gameplay
-        
+
         Args:
             game: Game instance
         """
@@ -120,13 +128,12 @@ class PlayingState(AbstractGameState):
     def render(self, game):
         """
         Render the game during gameplay
-        
+
         Args:
             game: Game instance
         """
         game.drawer.draw_board(self.current_turn)
-        game.drawer.draw_pieces(game.board, self.current_turn,
-                                self.selected_piece)
+        game.drawer.draw_pieces(game.board, self.current_turn, self.selected_piece)
         game.drawer.draw_captured(game.board)
 
         if game.check_color:
@@ -142,7 +149,7 @@ class PlayingState(AbstractGameState):
     def name(self):
         """
         Get the name of this state
-        
+
         Returns:
             String "PLAYING"
         """
