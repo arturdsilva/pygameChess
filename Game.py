@@ -13,7 +13,7 @@ class Game:
     def __init__(self, screen):
         """
         Initialize a new game
-        
+
         Args:
             screen: Pygame screen surface for rendering
         """
@@ -30,7 +30,7 @@ class Game:
     def change_state(self, new_state):
         """
         Change the current game state
-        
+
         Args:
             new_state: New GameState instance to transition to
         """
@@ -39,7 +39,7 @@ class Game:
     def handle_events(self):
         """
         Process all game events
-        
+
         Returns:
             Boolean indicating if the game should continue running
         """
@@ -49,6 +49,7 @@ class Game:
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 from Constants import Constants
+
                 x_coord = event.pos[0] // Constants.TILE_SIZE
                 y_coord = event.pos[1] // Constants.TILE_SIZE
                 click_location = (x_coord, y_coord)
@@ -77,10 +78,10 @@ class Game:
     def check_for_check(self, board):
         """
         Check if any king is in check
-        
+
         Args:
             board: Board instance to check
-            
+
         Returns:
             King piece that is in check, or None
         """
@@ -96,7 +97,7 @@ class Game:
     def current_state_name(self):
         """
         Get the name of the current game state
-        
+
         Returns:
             String representing the current state name
         """

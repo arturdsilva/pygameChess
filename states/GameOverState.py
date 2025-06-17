@@ -1,6 +1,7 @@
 import pygame
 
 from states.AbstractGameState import AbstractGameState
+from Color import Color
 
 
 class GameOverState(AbstractGameState):
@@ -12,7 +13,7 @@ class GameOverState(AbstractGameState):
     def handle_click(self, game, click_location):
         """
         Handle click event when game is over
-        
+
         Args:
             game: Game instance
             click_location: Tuple (x, y) representing board coordinates
@@ -22,6 +23,7 @@ class GameOverState(AbstractGameState):
 
     def handle_key(self, game, key):
         from states.PlayingState import PlayingState
+
         """
         Handle keyboard input when game is over
         
@@ -37,7 +39,7 @@ class GameOverState(AbstractGameState):
     def update(self, game):
         """
         Update game state when game is over
-        
+
         Args:
             game: Game instance
         """
@@ -47,13 +49,13 @@ class GameOverState(AbstractGameState):
     def render(self, game):
         """
         Render the game when game is over
-        
+
         Args:
             game: Game instance
         """
         # Draw the final board state
-        game.drawer.draw_board(0)
-        game.drawer.draw_pieces(game.board, 0, None)
+        game.drawer.draw_board(Color.WHITE)
+        game.drawer.draw_pieces(game.board, Color.WHITE, None)
         game.drawer.draw_captured(game.board)
 
         # Draw game over message
@@ -63,7 +65,7 @@ class GameOverState(AbstractGameState):
     def name(self):
         """
         Get the name of this state
-        
+
         Returns:
             String "GAME_OVER"
         """

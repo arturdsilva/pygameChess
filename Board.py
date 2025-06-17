@@ -20,7 +20,7 @@ class Board:
             "knight": Knight,
             "bishop": Bishop,
             "queen": Queen,
-            "king": King
+            "king": King,
         }
         self.build_standard_board()
 
@@ -52,10 +52,10 @@ class Board:
     def get_piece_at_location(self, location):
         """
         Get the piece at a specific board location
-        
+
         Args:
             location: Tuple (x, y) representing the position to check
-            
+
         Returns:
             The piece at the specified location or None if empty
         """
@@ -100,15 +100,23 @@ class Board:
             color: Enum value representing the color of the pieces
             line: Integer representing the line where the rank will be inserted
         """
-        pieces_order = ["rook", "knight", "bishop", "king", "queen", "bishop",
-                        "knight", "rook"]
+        pieces_order = [
+            "rook",
+            "knight",
+            "bishop",
+            "king",
+            "queen",
+            "bishop",
+            "knight",
+            "rook",
+        ]
         for i, piece_type in enumerate(pieces_order):
             self.add_piece(piece_type, (i, line), color)
 
     def remove_piece(self, piece):
         """
         Remove a piece from the board and add it to captured pieces
-        
+
         Args:
             piece: The piece to remove
         """
