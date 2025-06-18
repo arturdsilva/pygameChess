@@ -9,7 +9,9 @@ class Board:
     """
 
     def __init__(self):
-        """Initialize an empty board"""
+        """
+        Initialize an empty board
+        """
         self.white_pieces = []
         self.black_pieces = []
         self.captured_white_pieces = []
@@ -27,7 +29,6 @@ class Board:
     def build_standard_board(self):
         """
         Build a standard chess board with all pieces in starting positions
-
         """
         self.add_back_rank(Color.BLACK, 7)
         self.add_pawns(Color.BLACK, 6)
@@ -36,17 +37,23 @@ class Board:
 
     @property
     def pieces(self):
-        """Get all pieces on the board"""
+        """
+        Get all pieces on the board
+        """
         return self.white_pieces + self.black_pieces
 
     @property
     def white_locations(self):
-        """Get all locations occupied by white pieces"""
+        """
+        Get all locations occupied by white pieces
+        """
         return [piece.location for piece in self.white_pieces]
 
     @property
     def black_locations(self):
-        """Get all locations occupied by black pieces"""
+        """
+        Get all locations occupied by black pieces
+        """
         return [piece.location for piece in self.black_pieces]
 
     def get_piece_at_location(self, location):
