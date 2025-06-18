@@ -7,7 +7,9 @@ from Game import Game
 
 
 def main():
-    """Main game entry point"""
+    """
+    Main game entry point
+    """
     pygame.init()
     screen = pygame.display.set_mode([Constants.WIDTH, Constants.HEIGHT])
     pygame.display.set_caption("Two-Player Pygame Chess!")
